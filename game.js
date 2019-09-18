@@ -15,30 +15,30 @@ const OUT_OF_BOUNDS = 204;
 const ERROR = 404;
 
 let pickedNumber = null;
-let winner = false;
+let isOver = false;
 
 app.set('port', (process.env.PORT || DEFAULT_PORT));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.get("/start", function (req, response) {
-    if (!pickedNumber) {
+    if (!pickedNumber || isOver) {
         pickedNumber = Math.floor(Math.random() * (MAX - MIN)) + MIN;
+        isOver = false;
     }
-
     response.json({code: OK, min: MIN, max: MAX});
 });
 
 app.post("/guess/:number", (request, res) => {
     let responseObj = {code: ERROR, msg: "Game not started. Go to /start"};
     if (pickedNumber) {
-        if (!winner) {
+        if (!isOver) {
             let guess = parseInt(request.params.number);
 
             if (guess < MIN || guess > MAX) {
                 responseObj = {code: OUT_OF_BOUNDS, msg: "You are out of bounds! Check on /start"};
             } else if (guess === pickedNumber) {
-                winner = true;
+                isOver = true;
                 responseObj = {code: WIN, msg: "You guessed correctly ! Game over."};
             } else if (guess < pickedNumber) {
                 responseObj = {code: LOWER, msg: "The number is bigger, try again!"};
