@@ -6,13 +6,27 @@ const DEFAULT_PORT = 8080;
 const MAX = 100;
 const MIN = 1;
 
-const OK = 200;
-const WIN = 200;
-const LOWER = 201;
-const BIGGER = 202;
-const OVER = 203;
-const OUT_OF_BOUNDS = 204;
-const ERROR = 404;
+const HTTP_CODES = {
+    NOT_FOUND: 404,
+    OK: 200
+};
+
+const GAME_CODES = {
+    ERROR: -1,
+    OK: 200,
+    WIN: 200,
+    LOWER: 201,
+    BIGGER: 202,
+    OVER: 203
+};
+
+const ENGLISH_TXT = {
+    NOT_STARTED: "Game not started. Go to /start",
+    WIN: "You guessed correctly ! Game over.",
+    LOWER: "The number is bigger, try again!",
+    BIGGER: "The number is lower, try again!",
+    OVER: "The game is already over, too bad."
+};
 
 let pickedNumber = null;
 let isOver = false;
@@ -22,35 +36,33 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.get("/start", function (req, response) {
-    if (!pickedNumber || isOver) {
+    if (isOver) {
         pickedNumber = Math.floor(Math.random() * (MAX - MIN)) + MIN;
         isOver = false;
     }
-    response.json({code: OK, min: MIN, max: MAX});
+    response.json({code: HTTP_CODES.OK, min: MIN, max: MAX});
 });
 
 app.post("/guess/:number", (request, res) => {
-    let responseObj = {code: ERROR, msg: "Game not started. Go to /start"};
+    let responseObj = {code: GAME_CODES.ERROR, msg: ENGLISH_TXT.NOT_STARTED};
     if (pickedNumber) {
         if (!isOver) {
             let guess = parseInt(request.params.number);
 
-            if (guess < MIN || guess > MAX) {
-                responseObj = {code: OUT_OF_BOUNDS, msg: "You are out of bounds! Check on /start"};
-            } else if (guess === pickedNumber) {
+            if (guess === pickedNumber) {
                 isOver = true;
-                responseObj = {code: WIN, msg: "You guessed correctly ! Game over."};
+                responseObj = {code: GAME_CODES.WIN, msg: ENGLISH_TXT.WIN};
             } else if (guess < pickedNumber) {
-                responseObj = {code: LOWER, msg: "The number is bigger, try again!"};
+                responseObj = {code: GAME_CODES.LOWER, msg: ENGLISH_TXT.LOWER};
             } else {
-                responseObj = {code: BIGGER, msg: "The number is lower, try again!"};
+                responseObj = {code: GAME_CODES.BIGGER, msg: ENGLISH_TXT.BIGGER};
             }
         } else {
-            responseObj = {code: OVER, msg: "The game is already over, too bad."};
+            responseObj = {code: GAME_CODES.OVER, msg: ENGLISH_TXT.OVER};
         }
         res.json(responseObj);
     } else {
-        res.status(ERROR).json(responseObj);
+        res.status(HTTP_CODES.ERROR).json(responseObj);
     }
 });
 
