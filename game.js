@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const languageSelector = require("./language")
 const app = express();
+
 const DEFAULT_PORT = 8080;
 
 const MAX = 100;
@@ -13,27 +15,26 @@ const HTTP_CODES = {
 
 const GAME_CODES = {
     ERROR: -1,
-    OK: 200,
-    WIN: 200,
-    LOWER: 201,
-    BIGGER: 202,
-    OVER: 203
+    OK: 2000,
+    WIN: 2000,
+    LOWER: 2010,
+    BIGGER: 2020,
+    OVER: 2030
 };
 
-const ENGLISH_TXT = {
-    NOT_STARTED: "Game not started. Go to /start",
-    WIN: "You guessed correctly ! Game over.",
-    LOWER: "The number is bigger, try again!",
-    BIGGER: "The number is lower, try again!",
-    OVER: "The game is already over, too bad."
-};
+
+
 
 let pickedNumber = null;
 let isOver = false;
 
+
+
 app.set('port', (process.env.PORT || DEFAULT_PORT));
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(languageSelector())
+
 
 app.get("/start", function (req, response) {
     if (isOver) {
@@ -43,29 +44,47 @@ app.get("/start", function (req, response) {
     response.json({code: HTTP_CODES.OK, min: MIN, max: MAX});
 });
 
-app.post("/guess/:number", (request, res) => {
-    let responseObj = {code: GAME_CODES.ERROR, msg: ENGLISH_TXT.NOT_STARTED};
+app.post("/guess/:number", (req, res) => {
+
+    let responseObj = {code: GAME_CODES.ERROR, msg: req.language(NOT_STARTED)};
     if (pickedNumber) {
         if (!isOver) {
-            let guess = parseInt(request.params.number);
+            let guess = parseInt(req.params.number);
 
             if (guess === pickedNumber) {
                 isOver = true;
-                responseObj = {code: GAME_CODES.WIN, msg: ENGLISH_TXT.WIN};
+                responseObj = {code: GAME_CODES.WIN, msg: req.language.WIN};
             } else if (guess < pickedNumber) {
-                responseObj = {code: GAME_CODES.LOWER, msg: ENGLISH_TXT.LOWER};
+                responseObj = {code: GAME_CODES.LOWER, msg: req.language.LOWER};
             } else {
-                responseObj = {code: GAME_CODES.BIGGER, msg: ENGLISH_TXT.BIGGER};
+                responseObj = {code: GAME_CODES.BIGGER, msg: req.language.BIGGER};
             }
         } else {
-            responseObj = {code: GAME_CODES.OVER, msg: ENGLISH_TXT.OVER};
+            responseObj = {code: GAME_CODES.OVER, msg: req.language.OVER};
         }
         res.json(responseObj);
     } else {
-        res.status(HTTP_CODES.ERROR).json(responseObj);
+        res.status(HTTP_CODES.NOT_FOUND).json(responseObj);
     }
 });
 
+
+function getClientLang(req,res,next){
+
+    let language = req.headers["accept-language"] || DEFAULT_LANGUAGE;
+
+    language = language.split(",")[0].split(";")[0]; //["fr;q0.9", "en;0.8"] --> ["fr","q09"]
+
+    let languages = Object.keys(TEXTS); // ["en","no"]
+    if (!languages.indexOf(language)){
+        language = DEFAULT_LANGUAGE
+    } 
+    //language=  Object.keys(TEXTS).indexOf(language) ? language:DEFAULT_LANGUAGE;
+
+    req.language = TEXTS[language];
+
+    next();
+}
 
 app.listen(app.get('port'), function () {
     console.log('server running', app.get('port'));
