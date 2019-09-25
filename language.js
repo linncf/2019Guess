@@ -19,6 +19,14 @@ module.exports = (function(){
         BIGGER: "The number is lower, try again!",
         OVER: "The game is already over, too bad."
     }
+    ,
+    fr:{
+        NOT_STARTED: "La partie n'a pas commencé. Allez a /start",
+        WIN: "Vous avez deviné correctement! Fin de la partie.",
+        LOWER: "Le nombre est plus grand, reessaie!",
+        BIGGER: "Le nombre est plus petit, reessaie!",
+        OVER: "La partie est deja terminee, dommage."
+    }
     };
 
     return function getClientLang(req,res,next){
