@@ -30,8 +30,7 @@ module.exports = (function(){
         let languages = Object.keys(TEXTS); // ["en","no"]
         if (!languages.indexOf(language)){
             language = DEFAULT_LANGUAGE
-        } 
-        //language=  Object.keys(TEXTS).indexOf(language) ? language:DEFAULT_LANGUAGE;
+        }
 
         //------
         req.language = function(key){
@@ -43,13 +42,9 @@ module.exports = (function(){
             }
             
             return value
-
-            //return TEXTS[language][key] || TEXTS[DEFAULT_LANGUAGE][key];
-
-
-        }
+        };
         //------
 
         next();
     }
-})
+});
