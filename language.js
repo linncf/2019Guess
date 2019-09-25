@@ -21,7 +21,7 @@ module.exports = (function(){
     }
     ,
     fr:{
-        NOT_STARTED: "La partie n'a pas commencé. Allez a /start",
+        NOT_STARTED: "La partie n'a pas commence. Allez a /start",
         WIN: "Vous avez deviné correctement! Fin de la partie.",
         LOWER: "Le nombre est plus grand, reessaie!",
         BIGGER: "Le nombre est plus petit, reessaie!",
