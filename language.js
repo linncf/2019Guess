@@ -19,6 +19,13 @@ module.exports = (function(){
         BIGGER: "The number is lower, try again!",
         OVER: "The game is already over, too bad."
     }
+        ,ro:{
+            NOT_STARTED: "Jocul nu a început. Mergi la /start",
+            WIN: "Corect! Jocul s-a terminat",
+            LOWER: "Numărul este mai mare, încearcă din nou!",
+            BIGGER: "Numărul este mai mic, încearcă din nou!",
+            OVER: "Jocul s-a terminat deja."
+        }
     ,
     fr:{
         NOT_STARTED: "La partie n'a pas commence. Allez a /start",
@@ -55,4 +62,6 @@ module.exports = (function(){
 
         next();
     }
+
 });
+
