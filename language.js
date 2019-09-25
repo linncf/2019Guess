@@ -19,6 +19,14 @@ module.exports = (function(){
         BIGGER: "The number is lower, try again!",
         OVER: "The game is already over, too bad."
     }
+    ,
+    fr:{
+        NOT_STARTED: "La partie n'a pas commence. Allez a /start",
+        WIN: "Vous avez deviné correctement! Fin de la partie.",
+        LOWER: "Le nombre est plus grand, reessaie!",
+        BIGGER: "Le nombre est plus petit, reessaie!",
+        OVER: "La partie est deja terminee, dommage."
+    }
     };
 
     return function getClientLang(req,res,next){
@@ -30,8 +38,7 @@ module.exports = (function(){
         let languages = Object.keys(TEXTS); // ["en","no"]
         if (!languages.indexOf(language)){
             language = DEFAULT_LANGUAGE
-        } 
-        //language=  Object.keys(TEXTS).indexOf(language) ? language:DEFAULT_LANGUAGE;
+        }
 
         //------
         req.language = function(key){
@@ -43,13 +50,9 @@ module.exports = (function(){
             }
             
             return value
-
-            //return TEXTS[language][key] || TEXTS[DEFAULT_LANGUAGE][key];
-
-
-        }
+        };
         //------
 
         next();
     }
-})
+});
