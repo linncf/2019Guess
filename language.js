@@ -13,11 +13,11 @@ module.exports = (function(){
     }
     ,
     no:{
-        NOT_STARTED: "IKKE noe pågående spill. Gå til /start",
-        WIN: "You guessed correctly ! Game over.",
-        LOWER: "The number is bigger, try again!",
-        BIGGER: "The number is lower, try again!",
-        OVER: "The game is already over, too bad."
+        NOT_STARTED: "Ikke noe pågående spill. Gå til /start",
+        WIN: "Du gjettet riktig! Game over.",
+        LOWER: "Tallet er større, prøv på nytt!",
+        BIGGER: "Tallet er mindre, prøv på nytt!",
+        OVER: "Spillet er allerede over."
     }
         ,ro:{
             NOT_STARTED: "Jocul nu a început. Mergi la /start",
