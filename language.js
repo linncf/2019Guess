@@ -37,6 +37,13 @@ module.exports = function() {
       LOWER: "!الرقم اكبر, حاول مره ثانيه",
       BIGGER: "!الرقم اصغر, حاول مره ثانيه",
       OVER: ".انتهت اللعبه, للاسف"
+    },
+      de: {
+      NOT_STARTED: "Das Spiel hat noch nicht begonnen. Gehe zu /start",
+      WIN:"Richtig geraten! Das Spiel ist beendet.",
+      LOWER:"Die Zahl ist grösser, versuche noch einmal!",
+      BIGGER:"Die Zahl ist kleiner, versuche noch einmal",
+      OVER:"Das Spiel ist schon beendet."
     }
   };
 
