@@ -34,8 +34,12 @@ let pickedNumber = null;
 let isOngoing = false;
 
 let uniqueUsers = [];
+let adminpsw = process.env.admin_psw || "local"
+
 
 app.set('port', (process.env.PORT || DEFAULT_PORT));
+
+
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(languageSelector());
