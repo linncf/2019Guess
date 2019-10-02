@@ -33,21 +33,30 @@ const LAN_KEY =  {
 let pickedNumber = null;
 let isOngoing = false;
 
+let uniqueUsers = [];
+
 app.set('port', (process.env.PORT || DEFAULT_PORT));
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(languageSelector());
 
 
-app.get("/start", function (req, response) {
+app.get("/start/:user", function (req, response) {
     if (!isOngoing) {
         pickedNumber = Math.floor(Math.random() * (MAX - MIN)) + MIN;
         isOngoing = true;
+        uniqueUsers = [req.params.user];
     }
     response.json({code: HTTP_CODES.OK, min: MIN, max: MAX});
 });
 
-app.post("/guess/:number", (req, res) => {
+app.post("/guess/:user/:number", (req, res) => {
+
+
+    let user = req.params.user
+    if(uniqueUsers.indexOf(user) > -1){
+        uniqueUsers.push(user);
+    }
 
     let responseObj = {code: GAME_CODES.ERROR, msg: req.language(LAN_KEY.NOT_STARTED)};
   
@@ -66,6 +75,9 @@ app.post("/guess/:number", (req, res) => {
         } else {
             responseObj = {code: GAME_CODES.OVER, msg: req.language(LAN_KEY.OVER)};
         }
+
+        responseObj.users = uniqueUsers.length;
+
         res.json(responseObj);
     } else {
         res.status(HTTP_CODES.NOT_FOUND).json(responseObj);
